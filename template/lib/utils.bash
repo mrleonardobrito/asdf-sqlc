@@ -2,10 +2,9 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for <YOUR TOOL>.
-GH_REPO="<TOOL REPO>"
-TOOL_NAME="<YOUR TOOL>"
-TOOL_TEST="<TOOL CHECK>"
+GH_REPO="https://github.com/kyleconroy/sqlc"
+TOOL_NAME="sqlc"
+TOOL_TEST="sqlc --version"
 
 fail() {
 	echo -e "asdf-$TOOL_NAME: $*"
@@ -14,7 +13,6 @@ fail() {
 
 curl_opts=(-fsSL)
 
-# NOTE: You might want to remove this if <YOUR TOOL> is not hosted on GitHub releases.
 if [ -n "${GITHUB_API_TOKEN:-}" ]; then
 	curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
 fi
@@ -41,8 +39,19 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	# TODO: Adapt the release URL convention for <YOUR TOOL>
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	 case $(uname | tr '[:upper:]' '[:lower:]') in
+		linux*)
+		local platform="linux_amd64.tar.gz"
+		;;
+		darwin*)
+		local platform="darwin_amd64.tar.gz"
+		;;
+		*)
+		fail "Platform download not supported. Please, open an issue at $REPORT_URL"
+		;;
+	esac
+
+	url="$GH_REPO/releases/download/v${version}/${TOOL_NAME}_v${version}_${platform}"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"

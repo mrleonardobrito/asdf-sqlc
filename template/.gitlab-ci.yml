@@ -5,8 +5,8 @@ stages:
   - test
 
 variables:
-  PLUGIN_NAME: asdf-<YOUR TOOL>
-  TOOL_CHECK: <TOOL CHECK>
+  PLUGIN_NAME: asdf-sqlc
+  TOOL_CHECK: sqlc --version
   SHELLCHECK_VERSION: stable
 
 asdf-plugin-lint:
