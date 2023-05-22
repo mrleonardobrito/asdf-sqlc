@@ -51,7 +51,7 @@ download_release() {
 		;;
 	esac
 
-	url="$GH_REPO/releases/download/v${version}/${TOOL_NAME}_v${version}_${platform}"
+	url="$GH_REPO/releases/download/v${version}/${TOOL_NAME}_${version}_${platform}"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
